@@ -10,3 +10,6 @@ This is a small bf interpreter written in python and designed to be highly porta
 - \n is 10 for standardisation's sake
 - EOF is converted to -1 to respect C standard
 - | is a new instruction it prints the literal value of the cell
+
+for more information on the Brainf*ck language
+[Wikipedia:BrainF*ck](https://en.wikipedia.org/wiki/Brainfuck)
