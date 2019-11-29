@@ -20,16 +20,20 @@ except IOError:
 def dec_p():
     global mem
     global pointer
+    if pointer == 0:
+        raise Exception('Attempting to go below address 0')
     pointer -= 1
-    if pointer < 0:
-        raise Exception("pointer smaller than 0")
 
 def inc_p():
     global mem
     global pointer
-    pointer += 1
-    if pointer == len(mem):
-        mem.append(0)
+    print(pointer)
+    if pointer == sys.maxsize:
+        pointer = 0
+    else:
+        pointer += 1
+        if pointer == len(mem):
+            mem.append(0)
 
 def dec_v():
     global mem
@@ -46,7 +50,7 @@ def print_v():
     global pointer
     if mem[pointer] == 10:
         print()
-    print(chr(mem[pointer]), end="")
+    print(chr(mem[pointer] & 0xffffffffffffffff), end="")
 
 def print_vl():
     global mem
