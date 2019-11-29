@@ -1,4 +1,4 @@
- Brainf*ck Python, **why?**
+# Brainf*ck Python, **why?**
 ***Or bfpy for short***
 
 This is a small bf interpreter written in python and designed to be highly portable
