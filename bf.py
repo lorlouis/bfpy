@@ -1,24 +1,10 @@
 #!/usr/bin/python3
 import sys
+import readchar
 
 if len(sys.argv) != 2:
     print("Usage bfpy file.b")
     sys.exit()
-
-class _GetchUnix:
-    def __init__(self):
-        import tty, sys
-
-    def __call__(self):
-        import sys, tty, termios
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(1)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
 
 pointer = 0
 mem = [0]
@@ -58,30 +44,42 @@ def inc_v():
 def print_v():
     global mem
     global pointer
-    print(mem[pointer])
+    if mem[pointer] == 10:
+        print()
+    print(chr(mem[pointer]), end="")
+
+def print_vl():
+    global mem
+    global pointer
+    if mem[pointer] == 10:
+        print()
+    print(mem[pointer], end="")
 
 def read_v():
     global mem
     global pointer
-    mem[pointer] = _GetchUnix()
+    c = ord(readchar.readchar())
+    if c == 4:
+        c = -1
+    mem[pointer] = c
 
 def jf():
     global mem
     global pointer
     global program
     global pc
-    if mem[pointer] != 0:
+    if mem[pointer] == 0:
         loop_counter = 0
         initial_position = pc
-        while loop_counter != 0 and program[pc] != ']':
-            print('hello')
+        pc += 1
+        while loop_counter != 0 or program[pc] != ']':
             if program[pc] == '[':
                 loop_counter += 1
             elif program[pc] == ']':
-                loop_couter -= 1
+                loop_counter -= 1
             pc += 1
             if pc >= len(program):
-                raise Exception('no matching ] {}').format(initial_position)
+                raise Exception('no matching ] {}'.format(initial_position))
 
 def jb():
     global mem
@@ -91,14 +89,15 @@ def jb():
     if mem[pointer] != 0:
         loop_counter = 0
         initial_position = pc
-        while loop_counter != 0 and program[pc] != ']':
+        pc -= 1
+        while loop_counter != 0 or program[pc] != '[':
             if program[pc] == '[':
                 loop_counter -= 1
             elif program[pc] == ']':
-                loop_couter += 1
+                loop_counter += 1
             pc -= 1
             if pc < 0:
-                raise Exception('no matching [ {}').format(initial_position)
+                raise Exception('no matching [ {}'.format(initial_position))
 
 mapper = {
     '>': inc_p,
@@ -107,6 +106,7 @@ mapper = {
     '-': dec_v,
     '.': print_v,
     ',': read_v,
+    '|': print_vl,
     '[': jf,
     ']': jb
 }
