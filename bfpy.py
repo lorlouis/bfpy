@@ -27,7 +27,6 @@ def dec_p():
 def inc_p():
     global mem
     global pointer
-    print(pointer)
     if pointer == sys.maxsize:
         pointer = 0
     else:
